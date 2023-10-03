@@ -9,10 +9,10 @@ namespace SearchSubstrings.BL.Model
 {
     public class Searcher
     {
-        private readonly int[] _alphabetTable;
+        public int[] AlphabetTable;
         public string CurrentString { get; set; }
         private string _currentSubstring = null!;
-        private int _startUnicodeIndex;
+        public int StartUnicodeIndex;
         private int _endUnicodeIndex;
         public string CurrentSubstring
         {
@@ -22,34 +22,41 @@ namespace SearchSubstrings.BL.Model
             {
                 _currentSubstring = value;
 
-                for (int i = 0; i < _alphabetTable.Length; i++)
+                for (int i = 0; i < AlphabetTable.Length; i++)
                 {
-                    _alphabetTable[i] = value.Length;
+                    AlphabetTable[i] = value.Length;
                 }
 
-                for (int j = 0; j < _currentSubstring.Length; j++)
+                for (int j = 0; j < _currentSubstring.Length; j++) // _currentSubstring.Length - 1 потому что последний символ не учитываем
                 {
-                    int index = char.ConvertToUtf32(_currentSubstring[j].ToString(), 0) - _startUnicodeIndex;
-                    if (_alphabetTable[index] == _currentSubstring.Length)
+                    int index = char.ConvertToUtf32(_currentSubstring[j].ToString(), 0) - StartUnicodeIndex;
+                    if (j == _currentSubstring.Length - 1)
                     {
-                        _alphabetTable[index] = _currentSubstring.Length - j - 1;
+                        AlphabetTable[char.ConvertToUtf32(_currentSubstring[j].ToString(), 0) - StartUnicodeIndex] = 1;
+                        break;
+                    }
+                    if (AlphabetTable[index] == _currentSubstring.Length)
+                    {
+                        AlphabetTable[index] = _currentSubstring.Length - j - 1;
                         continue;
                     }
-                    _alphabetTable[index] = _currentSubstring.Length;
-                    _alphabetTable[index] = _currentSubstring.Length - j - 1;
+                    AlphabetTable[index] = _currentSubstring.Length;
+                    AlphabetTable[index] = _currentSubstring.Length - j - 1;
                 }
 
-                for (int i = 0; i < _alphabetTable.Length; i++)
+                /*
+                for (int i = 0; i < AlphabetTable.Length; i++)
                 {
-                    Console.WriteLine(_alphabetTable[i]);                    
+                    Console.WriteLine(AlphabetTable[i]);
                 }
+                */
             }
         }
 
         public Searcher(int startUnicodeIndex, int endUnicodeIndex, string currentString, string currentSubstring)
         {
-            _alphabetTable = new int[endUnicodeIndex - startUnicodeIndex + 1];
-            _startUnicodeIndex = startUnicodeIndex;
+            AlphabetTable = new int[endUnicodeIndex - startUnicodeIndex + 1];
+            StartUnicodeIndex = startUnicodeIndex;
             _endUnicodeIndex = endUnicodeIndex;
             CurrentString = currentString;
             CurrentSubstring = currentSubstring;
