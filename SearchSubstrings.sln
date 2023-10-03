@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchSubstrings.BL", "SearchSubstrings.BL\SearchSubstrings.BL.csproj", "{8E629096-3A87-48F8-92F2-3E99336C70D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchSubstrings.BL", "SearchSubstrings.BL\SearchSubstrings.BL.csproj", "{8E629096-3A87-48F8-92F2-3E99336C70D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchSubstring.CMD", "SearchSubstring.CMD\SearchSubstring.CMD.csproj", "{11B40AD0-C007-4E9E-A9EF-71FD9F50086D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchSubstring.CMD", "SearchSubstring.CMD\SearchSubstring.CMD.csproj", "{11B40AD0-C007-4E9E-A9EF-71FD9F50086D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearcherTests", "SearcherTests\SearcherTests.csproj", "{016571B0-72FF-467E-B2DD-7D676B53D4AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{11B40AD0-C007-4E9E-A9EF-71FD9F50086D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11B40AD0-C007-4E9E-A9EF-71FD9F50086D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11B40AD0-C007-4E9E-A9EF-71FD9F50086D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{016571B0-72FF-467E-B2DD-7D676B53D4AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{016571B0-72FF-467E-B2DD-7D676B53D4AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{016571B0-72FF-467E-B2DD-7D676B53D4AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{016571B0-72FF-467E-B2DD-7D676B53D4AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -27,10 +27,10 @@ namespace SearchSubstrings.BL.Model
                     AlphabetTable[i] = value.Length;
                 }
 
-                for (int j = 0; j < _currentSubstring.Length; j++) // _currentSubstring.Length - 1 потому что последний символ не учитываем
+                for (int j = 0; j < _currentSubstring.Length; j++)
                 {
                     int index = char.ConvertToUtf32(_currentSubstring[j].ToString(), 0) - StartUnicodeIndex;
-                    if (j == _currentSubstring.Length - 1)
+                    if (j == _currentSubstring.Length - 1) // последнему символу в таблице ставим 1 для того чтобы поиск продолжался после обнаружения первой подстроки
                     {
                         AlphabetTable[char.ConvertToUtf32(_currentSubstring[j].ToString(), 0) - StartUnicodeIndex] = 1;
                         break;
