@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchSubstrings.BL", "Sear
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchSubstring.CMD", "SearchSubstring.CMD\SearchSubstring.CMD.csproj", "{11B40AD0-C007-4E9E-A9EF-71FD9F50086D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearcherTests", "SearcherTests\SearcherTests.csproj", "{016571B0-72FF-467E-B2DD-7D676B53D4AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearcherTests", "SearcherTests\SearcherTests.csproj", "{016571B0-72FF-467E-B2DD-7D676B53D4AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
