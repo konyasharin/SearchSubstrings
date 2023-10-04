@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.ComTypes;
-using SearchSubstrings.BL.Controller;
+﻿using SearchSubstrings.BL.Controller;
 
 namespace SearchSubstring.CMD
 {
@@ -14,7 +13,7 @@ namespace SearchSubstring.CMD
         public static void Highlight(SearcherController searcherController)
         {
             Dictionary<string, List<int>> dictionary =
-                searcherController.Search("rReggeRrerrkrrkkggg", new String[2]{"err", "rr"}, caseSensitivity: false, method: "first", count: 4);
+                searcherController.Search("rReggeRrerrkrrkkggg", new String[2] { "err", "rr" }, caseSensitivity: false, method: "first", count: 4);
 
             int i = 0;
             int indexEndOfPaint = 0;
@@ -28,7 +27,7 @@ namespace SearchSubstring.CMD
                     {
                         flag = true;
                         checkSubstring = key;
-                        break;   
+                        break;
                     }
                 }
 

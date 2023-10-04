@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SearchSubstrings.BL.Model
+﻿namespace SearchSubstrings.BL.Model
 {
     public class Searcher
     {
@@ -61,5 +54,5 @@ namespace SearchSubstrings.BL.Model
             CurrentString = currentString;
             CurrentSubstring = currentSubstring;
         }
-}
+    }
 }

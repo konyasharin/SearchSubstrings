@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SearchSubstrings.BL.Model;
+﻿using SearchSubstrings.BL.Model;
 
 namespace SearchSubstrings.BL.Controller
 {
