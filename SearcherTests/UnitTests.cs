@@ -101,14 +101,37 @@ namespace SearcherTests
             Assert.IsTrue(EqualIndexes(result[substrings[0]], searcherController.Search(str, substrings, sensitivity, method, count)[substrings[0]]));
         }
 
+        [DataTestMethod]
+
         [DataRow("", new string[2] { "abc", "a" }, false, "first", 1, new int[0], new int[0])]
-        public void TestSearchManySubstr(string str, string[] substrings, bool sensitivity, string method, int count,
-            params int[] indexes)
+        [DataRow("", new string[2] { "abc", "a" }, true, "first", 1, new int[0], new int[0])]
+        [DataRow("", new string[2] { "abc", "a" }, false, "last", 1, new int[0], new int[0])]
+        [DataRow("", new string[2] { "abc", "a" }, true, "last", 1, new int[0], new int[0])]
+
+        [DataRow("a", new string[2] { "abc", "a" }, false, "first", 1, new int[0], new int[1] { 0 })]
+        [DataRow("a", new string[2] { "abc", "a" }, true, "first", 1, new int[0], new int[1] { 0 })]
+        [DataRow("a", new string[2] { "abc", "a" }, false, "last", 1, new int[0], new int[1] { 0 })]
+        [DataRow("a", new string[2] { "abc", "a" }, true, "last", 1, new int[0], new int[1] { 0 })]
+
+        [DataRow("ababbababa", new string[2] { "aba", "bba" }, false, "first", 4, new int[3] { 0, 5, 7 }, new int[1] { 3 })]
+        [DataRow("ababbababa", new string[2] { "aba", "bba" }, true, "first", 4, new int[3] { 0, 5, 7 }, new int[1] { 3 })]
+        [DataRow("ababbababa", new string[2] { "aba", "bba" }, false, "last", 4, new int[3] { 7, 5, 0 }, new int[1] { 3 })]
+        [DataRow("ababbababa", new string[2] { "aba", "bba" }, true, "last", 4, new int[3] { 7, 5, 0 }, new int[1] { 3 })]
+
+        [DataRow("ababbababa", new string[2] { "aba", "bba" }, false, "first", 3, new int[2] { 0, 5 }, new int[1] { 3 })]
+        [DataRow("ababbababa", new string[2] { "aba", "bba" }, true, "first", 2, new int[1] { 0 }, new int[1] { 3 })]
+        [DataRow("ababbababa", new string[2] { "aba", "bba" }, false, "last", 1, new int[1] { 7 }, new int[0])]
+        [DataRow("ababbababa", new string[2] { "aba", "bba" }, true, "last", 10, new int[3] { 7, 5, 0 }, new int[1] { 3 })]
+
+        public void TestSearchTwoSubstr(string str, string[] substrings, bool sensitivity, string method, int count,
+            int[] indexes1, int[] indexes2)
         {
-            List<int> listIndexes = new List<int>(indexes);
-            Dictionary<string, List<int>> result = new Dictionary<string, List<int>> { { substrings[0], listIndexes } };
+            List<int> listIndexes1 = new List<int>(indexes1);
+            List<int> listIndexes2 = new List<int>(indexes2);
+            Dictionary<string, List<int>> result = new Dictionary<string, List<int>> { { substrings[0], listIndexes1 }, { substrings[1], listIndexes2 } };
             searcherController = new(char.ConvertToUtf32("A".ToString(), 0), char.ConvertToUtf32("z".ToString(), 0));
             Assert.IsTrue(EqualIndexes(result[substrings[0]], searcherController.Search(str, substrings, sensitivity, method, count)[substrings[0]]));
+            Assert.IsTrue(EqualIndexes(result[substrings[1]], searcherController.Search(str, substrings, sensitivity, method, count)[substrings[1]]));
         }
 
         private bool EqualIndexes(List<int> indexes1, List<int> indexes2)

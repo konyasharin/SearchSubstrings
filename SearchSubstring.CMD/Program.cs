@@ -1,4 +1,5 @@
 ﻿using SearchSubstrings.BL.Controller;
+using Microsoft.Win32;
 
 namespace SearchSubstring.CMD
 {
@@ -13,7 +14,7 @@ namespace SearchSubstring.CMD
         public static void Highlight(SearcherController searcherController)
         {
             Dictionary<string, List<int>> dictionary =
-                searcherController.Search("aAbCbccaabc", new String[2] { "AbC", "rr" }, caseSensitivity: false, method: "first", count: 2);
+                searcherController.Search("aAbCbccaabc", new String[2] { "abc", "bc" }, caseSensitivity: false, method: "last", count: 1);
 
             int i = 0;
             int indexEndOfPaint = 0;
@@ -59,7 +60,15 @@ namespace SearchSubstring.CMD
                     i += 1;
                 }
             }
+
             Console.ResetColor();
+        }
+
+        public static string OpenFile()
+        {
+            Console.WriteLine("Введите полный путь до файла(.txt): ");
+            string filePath = Console.ReadLine();
+            return "";
         }
     }
 }
