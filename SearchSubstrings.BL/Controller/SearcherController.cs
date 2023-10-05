@@ -17,11 +17,6 @@ namespace SearchSubstrings.BL.Controller
             int countOfFound = 0;
             string currentStringOld = currentString;
 
-            if (method == "last")
-            {
-                currentString = new string(currentString.Reverse().ToArray());
-            }
-
             for (int j = 0; j < substrings.Length; j++)
             {
                 string currentSubstring = substrings[j];
@@ -40,9 +35,13 @@ namespace SearchSubstrings.BL.Controller
                 }
 
                 int i = currentSubstring.Length;
-                answers.Add(currentSubstring, new List<int>());
+                if (method == "last")
+                {
+                    i = currentString.Length - currentSubstring.Length;
+                }
+                answers.Add(currentSubstringOld, new List<int>());
 
-                while (i <= currentString.Length)
+                while (i <= currentString.Length && method == "first")
                 {
                     if (count == 0 || countOfFound >= count)
                     {
@@ -50,14 +49,7 @@ namespace SearchSubstrings.BL.Controller
                     }
                     if (currentString.Substring(i - currentSubstring.Length, currentSubstring.Length) == currentSubstring)
                     {
-                        if (method == "last")
-                        {
-                            answers[currentSubstring].Add(currentString.Length - i);
-                        }
-                        else
-                        {
-                            answers[currentSubstring].Add(i - currentSubstring.Length);
-                        }
+                        answers[currentSubstringOld].Add(i - currentSubstring.Length);
                         countOfFound += 1;
 
                         if (countOfFound >= count)
@@ -67,11 +59,27 @@ namespace SearchSubstrings.BL.Controller
                     }
                     i += Searcher.AlphabetTable[char.ConvertToUtf32(currentString[i - 1].ToString(), 0) - Searcher.StartUnicodeIndex];
                 }
-            }
 
-            if (method == "last")
-            {
-                Searcher.CurrentString = new string(Searcher.CurrentString.Reverse().ToArray());
+                while (i >= 0 && method == "last")
+                {
+                    if (count == 0 || countOfFound >= count)
+                    {
+                        break;
+                    }
+
+                    if (currentString.Substring(i, currentSubstring.Length) ==
+                        currentSubstring)
+                    {
+                        answers[currentSubstringOld].Add(i);
+                        countOfFound += 1;
+
+                        if (countOfFound >= count)
+                        {
+                            break;
+                        }
+                    }
+                    i -= Searcher.AlphabetTable[char.ConvertToUtf32(currentString[i].ToString(), 0) - Searcher.StartUnicodeIndex];
+                }
             }
             return answers;
         }

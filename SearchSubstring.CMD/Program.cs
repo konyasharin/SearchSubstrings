@@ -13,7 +13,7 @@ namespace SearchSubstring.CMD
         public static void Highlight(SearcherController searcherController)
         {
             Dictionary<string, List<int>> dictionary =
-                searcherController.Search("rReggeRrerrkrrkkggg", new String[2] { "err", "rr" }, caseSensitivity: false, method: "first", count: 4);
+                searcherController.Search("aAbCbccaabc", new String[2] { "AbC", "rr" }, caseSensitivity: false, method: "first", count: 2);
 
             int i = 0;
             int indexEndOfPaint = 0;
