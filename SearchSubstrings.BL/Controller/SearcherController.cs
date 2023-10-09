@@ -37,7 +37,6 @@ namespace SearchSubstrings.BL.Controller
         public Dictionary<string, List<int>> Search(string currentString, string[] substrings, bool caseSensitivity = false, string method = "first", int? count = null)
         {
             Dictionary<string, List<int>> answers = new Dictionary<string, List<int>>();
-            int countOfFound = 0;
             string currentStringOld = currentString;
             // проходимся по всем подстрокам и выполняем для каждой из них наш алгоритм
             // (нельзя в нашем алгоритме искать сразу все подстроки, только по очереди)
@@ -71,12 +70,6 @@ namespace SearchSubstrings.BL.Controller
                     if (currentString.Substring(i - currentSubstring.Length, currentSubstring.Length) == currentSubstring)
                     {
                         answers[currentSubstringOld].Add(i - currentSubstring.Length);
-                        countOfFound += 1;
-
-                        if (countOfFound >= count)
-                        {
-                            break;
-                        }
                     }
                     i += Searcher.AlphabetTable[char.ConvertToUtf32(currentString[i - 1].ToString(), 0) - Searcher.StartUnicodeIndex];
                 }
@@ -87,12 +80,6 @@ namespace SearchSubstrings.BL.Controller
                         currentSubstring)
                     {
                         answers[currentSubstringOld].Add(i);
-                        countOfFound += 1;
-
-                        if (countOfFound >= count)
-                        {
-                            break;
-                        }
                     }
                     i -= Searcher.AlphabetTable[char.ConvertToUtf32(currentString[i].ToString(), 0) - Searcher.StartUnicodeIndex];
                 }

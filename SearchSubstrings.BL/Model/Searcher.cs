@@ -23,10 +23,6 @@
         /// Индекс юникод-символа, с которого начинается наш алфавит.
         /// </summary>
         public int StartUnicodeIndex;
-        /// <summary>
-        /// Индекс юникод-символа, на котором заканчивается наш алфавит.
-        /// </summary>
-        private int _endUnicodeIndex;
 
         #endregion
         #region CurrentSubstring set and get
@@ -77,7 +73,6 @@
         {
             AlphabetTable = new int[endUnicodeIndex - startUnicodeIndex + 1];
             StartUnicodeIndex = startUnicodeIndex;
-            _endUnicodeIndex = endUnicodeIndex;
             CurrentString = currentString;
             CurrentSubstring = currentSubstring;
         }

@@ -1,7 +1,26 @@
 ﻿using SearchSubstrings.BL.Controller;
+using CommandLine;
+using CommandLine.Text;
 
 namespace SearchSubstring.CMD
 {
+    /// <summary>
+    /// создает CLI
+    /// </summary>
+    public class Flags
+    {
+        [Option('m', "method", HelpText = "first - поиск с начала, last - поиск с конца.")]
+        public string? Method { get; set; }
+        [Option('s', "caseSensitivity", HelpText = "Включение чувствительности к регистру.")]
+        public bool CaseSensitivity { get; set; }
+        [Option("command", HelpText = "1 - Поиск подстроки в файле и вывод с выделением\n" +
+                                              "2 - Поиск подстроки в файле и вывод без выделения\n" +
+                                              "3 - Поиск подстроки в строке с выделением\n" +
+                                              "4 - Поиск подстроки в строке без выделения")]
+        public string? Command { get; set; }
+        [Option("count", HelpText = "Количество первых вхождений")]
+        public int? Count { get; set; }
+    }
     /// <summary>
     /// CMD приложение.
     /// </summary>
@@ -26,6 +45,10 @@ namespace SearchSubstring.CMD
         /// </summary>
         private static bool _programIsActive = true;
         /// <summary>
+        /// Команда от 1 до 4
+        /// </summary>
+        private static string? _command;
+        /// <summary>
         /// Контроллер для Searcher, также здесь мы говорим, что будем использовать английский алфавит.
         /// </summary>
         private static readonly SearcherController SearcherController = new(char.ConvertToUtf32("A", 0), char.ConvertToUtf32("z", 0));
@@ -34,24 +57,64 @@ namespace SearchSubstring.CMD
         /// <summary>
         /// Точка входа в программу.
         /// </summary>
-        static void Main()
+        static void Main(string[] args)
         {
-            Console.WriteLine("Внимание! Вы можете использовать в качестве символов строк и подстрок только символы английского алфавита(верхний и нижний регистры)!");
+            // Обработка флагов
+            Parser.Default.ParseArguments<Flags>(args)
+                .WithParsed(options =>
+                {
+                    if(options.Method == "last" || options.Method == "first")
+                    {
+                        _method = options.Method;
+                    }
+                    else if (options.Method != null)
+                    {
+                        Console.WriteLine("Ошибка! method может быть first или last! Перезапустите программу с правильным флагами");
+                        Program._programIsActive = false;
+                    }
+                    else
+                    {
+                        _method = "first";
+                    }
+
+                    _caseSensitivity = options.CaseSensitivity;
+
+                    if (new[]{"1", "2", "3", "4"}.Contains(options.Command))
+                    {
+                        _command = options.Command;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ошибка! Неверная команда!");
+                        Program._programIsActive = false;
+                    }
+
+                    _count = options.Count;
+                });
+
+            // Для работы --help без работы программы
+            if (new[] { "1", "2", "3", "4" }.Contains(_command))
+            {
+                Console.WriteLine("Внимание! Вы можете использовать в качестве символов строк и подстрок только символы английского алфавита(верхний и нижний регистры)!");
+            }
+            else
+            {
+                Program._programIsActive = false;
+            }
             while (Program._programIsActive)
             {
-                Console.WriteLine("\nВведите одну из следующих команд (или END):\n" +
-                                  "1 - Поиск подстроки в файле(первые 10 строк) и вывод с выделением\n" +
-                                  "2 - Поиск подстроки в файле(первые 10 строк) и вывод без выделения\n" +
-                                  "3 - Поиск подстроки в строке с выделением\n" +
-                                  "4 - Поиск подстроки в строке без выделения");
-                string? command = Console.ReadLine();
                 string? currentString;
-                switch (command)
+                switch (_command)
                 {
                     case "1": 
                         currentString = OpenFile();
                         if (currentString == null)
                         {
+                            break;
+                        }
+                        else if (currentString == "END")
+                        {
+                            Program._programIsActive = false;
                             break;
                         }
                         GetStartParamsAndHighlight(currentString);
@@ -62,24 +125,36 @@ namespace SearchSubstring.CMD
                         {
                             break;
                         }
+                        else if (currentString == "END")
+                        {
+                            Program._programIsActive = false;
+                            break;
+                        }
                         GetStartParamsAndHighlight(currentString, isHighlight: false);
                         break;
                     case "3":
-                        Console.WriteLine("Введите строку, в которой будет проводиться поиск: ");
+                        Console.WriteLine("\nВведите строку, в которой будет проводиться поиск (или END): ");
                         currentString = Console.ReadLine();
+                        if (currentString == "END")
+                        {
+                            Program._programIsActive = false;
+                            break;
+                        }
                         GetStartParamsAndHighlight(currentString!);
                         break;
                     case "4":
-                        Console.WriteLine("Введите строку, в которой будет проводиться поиск: ");
+                        Console.WriteLine("\nВведите строку, в которой будет проводиться поиск (или END): ");
                         currentString = Console.ReadLine();
+                        if (currentString == "END")
+                        {
+                            Program._programIsActive = false;
+                            break;
+                        }
                         GetStartParamsAndHighlight(currentString!, isHighlight: false);
-                        break;
-                    case "END":
-                        Program._programIsActive = false;
-                        Console.WriteLine("Работа программы успешно завершена!");
                         break;
                     default:
                         Console.WriteLine("Вы ввели неверную команду!");
+                        Program._programIsActive = false;
                         break;
                 }
             }
@@ -107,7 +182,6 @@ namespace SearchSubstring.CMD
             {
                 return;
             }
-            GetFlags();
             if (isHighlight)
             {
                 Highlight(currentString, currentSubstrings);
@@ -207,8 +281,18 @@ namespace SearchSubstring.CMD
         public static string? OpenFile()
         {
             string str = "";
-            Console.WriteLine("Введите полный путь до файла(.txt): ");
+            Console.WriteLine("\nВведите полный путь до файла .txt (или END): ");
             string filePath = Console.ReadLine()!;
+            if (filePath == "END")
+            {
+                return "END";
+            }
+
+            if (filePath.Length < 4)
+            {
+                Console.WriteLine("Ошибка! Вы ввели не полный путь до файла!");
+                return null;
+            }
             if (filePath.Substring(filePath.Length - 4, 4) != ".txt")
             {
                 Console.WriteLine("Ошибка! Вы открываете не .txt файл!");
@@ -221,6 +305,7 @@ namespace SearchSubstring.CMD
                 foreach (var line in lines)
                 {
                     str = string.Concat(str, line);
+                    
                 }
             }
             catch
@@ -269,71 +354,6 @@ namespace SearchSubstring.CMD
             return currentSubstrings;
         }
 
-        /// <summary>
-        /// Получение команд (флагов) от пользователя.
-        /// </summary>
-        public static void GetFlags()
-        {
-            string? command;
-            Console.WriteLine("Выберите одну из команд: \n" +
-                              "1 - Включить чувствительность к регистру\n" +
-                              "2 - Отключить чувствительность к регистру");
-            command = Console.ReadLine();
-            switch (command)
-            {
-                case "1":
-                    Program._caseSensitivity = true;
-                    break;
-                case "2":
-                    Program._caseSensitivity = false;
-                    break;
-                default:
-                    Console.WriteLine("Вы ввели неверную команду!");
-                    GetFlags();
-                    return;
-            }
-
-            Console.WriteLine("Выберите одну из команд: \n" +
-                              "1 - Поиск с начала строки\n" +
-                              "2 - Поиск с конца строки");
-            command = Console.ReadLine();
-            switch (command)
-            {
-                case "1":
-                    Program._method = "first";
-                    break;
-                case "2":
-                    Program._method = "last";
-                    break;
-                default:
-                    Console.WriteLine("Вы ввели неверную команду!");
-                    GetFlags();
-                    return;
-            }
-
-            Console.WriteLine("Введите количество первых вхождений(или 0, если хотите не ограничивать): ");
-            try
-            {
-                Program._count = int.Parse(Console.ReadLine()!);
-                if (Program._count < 0)
-                {
-                    Console.WriteLine("Количество первых вхождений должно быть больше нуля(или введите 0)!");
-                    GetFlags();
-                    return;
-                }
-
-                if (Program._count == 0)
-                {
-                    Program._count = null;
-                }
-            }
-            catch
-            {
-                Console.WriteLine("Неверный формат ввода!");
-                GetFlags();
-                return;
-            }
-        }
 
         /// <summary>
         /// Проверяет, строка состоит только из символов английского алфавита или нет.
